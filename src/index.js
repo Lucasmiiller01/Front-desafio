@@ -1,7 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import Form from './componets/register/form';
+import Form from './componets/delivery/form';
+import List from './componets/delivery/list';
 import Header from './componets/partials/header';
 import * as serviceWorker from './serviceWorker';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
@@ -11,7 +12,7 @@ ReactDOM.render(
         <Header/>
             <Switch>
                 <Route path="/" exact={true} component={Form} />
-                <Route path="/register" component={Form} />
+                <Route path="/List" component={List} />
             </Switch>
     </Router>
 , document.getElementById('root'));

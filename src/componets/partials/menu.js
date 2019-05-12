@@ -12,11 +12,11 @@ export default class menu extends Component {
   
       return (
         <Menu pointing secondary>
-          <Menu.Item name='Cadastrar Pedidos' as={ Link }  to='/register' active={activeItem === 'Cadastrar Pedidos'} onClick={this.handleItemClick} />
+          <Menu.Item name='Cadastrar Pedidos' as={ Link }  to='/' active={activeItem === 'Cadastrar Pedidos'} onClick={this.handleItemClick} />
           
             <Menu.Item
                 name='Listar Pedidos'
-                as={ Link }  to='/'
+                as={ Link }  to='/List'
                 active={activeItem === 'Listar Pedidos'}
                 onClick={this.handleItemClick}
             />

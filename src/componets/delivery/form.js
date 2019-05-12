@@ -25,6 +25,7 @@ class form extends Component {
             deliverySubmit: {},
             modalText: false,
             modalTitle: false,
+            modalOpen: false,
           
         }
     }
@@ -39,7 +40,6 @@ class form extends Component {
         if(!localStorage.getItem('__tokenAccess')) {
             this.LoginPassport();
         }
-       
     }
 
     LoginPassport = () => {
@@ -86,13 +86,14 @@ class form extends Component {
         payload = JSON.stringify(payload);
         console.log(payload);
         api.post('/api/delivery/save', { payload:payload }).then(response => {
-            if(response.data.message == "success") {
+            if(response.data.message === "success") {
                 this.setState({modalOpen: true, modalTitle: 'Messangem', modalText: 'Entrega cadastrada com sucesso.'});
             }
             return;
         }).catch(e => {
             console.log(e.message.error);
             this.setState({modalOpen: true, modalTitle: 'Erro', modalText: 'Ocorreu um erro ao tentar cadastrar uma nova entrega, tente novamente mais tarde.'});
+            localStorage.removeItem('__tokenAccess');
         })
     }
     SubmitForm = (e) =>  {
@@ -269,7 +270,6 @@ const style = {
     container: {
         margin: '5%',
     },
-  
    
 }
 
