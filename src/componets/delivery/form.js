@@ -10,7 +10,6 @@ class form extends Component {
        this.state = {
             nameClient: '',
             nameClientError: false,
-            createDeliveryError: false,
             formError: false,
             dateDelivery: '',
             dateDeliveryError: false,
@@ -26,6 +25,7 @@ class form extends Component {
             modalText: false,
             modalTitle: false,
             modalOpen: false,
+            formSuccess: false,
           
         }
     }
@@ -73,7 +73,7 @@ class form extends Component {
     }
 
     SaveDelivery = () => {
-     
+        this.setState({nameClient: '', dateDelivery: '', zipStart: '', numberStart: '', zipEnd: '', numberEnd: ''});
         let payload = {
             "nameClient": this.state.nameClient,
             "date": this.state.dateDelivery.split('/')[2].replace(/\D+/g, '') +'-'+ this.state.dateDelivery.split('/')[1].replace(/\D+/g, '') + '-'+ this.state.dateDelivery.split('/')[0].replace(/\D+/g, ''),
@@ -87,16 +87,17 @@ class form extends Component {
         console.log(payload);
         api.post('/api/delivery/save', { payload:payload }).then(response => {
             if(response.data.message === "success") {
-                this.setState({modalOpen: true, modalTitle: 'Messangem', modalText: 'Entrega cadastrada com sucesso.'});
+                this.setState({modalOpen: true, modalTitle: 'Messangem', modalText: 'Entrega cadastrada com sucesso.', formSuccess: true, formError: false});
             }
             return;
         }).catch(e => {
             console.log(e.message.error);
-            this.setState({modalOpen: true, modalTitle: 'Erro', modalText: 'Ocorreu um erro ao tentar cadastrar uma nova entrega, tente novamente mais tarde.'});
+            this.setState({modalOpen: true, modalTitle: 'Erro', modalText: 'Ocorreu um erro ao tentar cadastrar uma nova entrega, insira uma data válida.'});
             localStorage.removeItem('__tokenAccess');
         })
     }
     SubmitForm = (e) =>  {
+ 
         e.preventDefault();
         
 
@@ -111,7 +112,12 @@ class form extends Component {
         }
 
         if(this.state.dateDelivery !== "" && this.state.dateDelivery.replace(/\D+/g, '').length > 7) {
-            this.setState({dateDeliveryError: false})
+            if(this.state.dateDelivery.split('/')[0].replace(/\D+/g, '') > 31 && this.state.dateDelivery.split('/')[1].replace(/\D+/g, '') > 12){
+                error = true;
+                this.setState({dateDeliveryError: true})
+            }
+            else 
+                this.setState({dateDeliveryError: false})
         }
         else {
             error = true;
@@ -170,17 +176,21 @@ class form extends Component {
        
         <div style={style.container}>
         {this.state.modalOpen ? <ModalMessage size='mini' title={this.state.modalTitle} text={this.state.modalText}></ModalMessage> : null}
-        <Form onSubmit={(event) => { this.SubmitForm(event); }} error={this.state.createDeliveryError || this.state.formError}>
+        <Form onSubmit={(event) => { this.SubmitForm(event); }} error={this.state.formError} success={this.state.formSuccess && !this.state.formError}> 
             <Message
              error
              header="Erro ao tentar criar pedido"
              content="Preencher o Formúlario corretamente."/>
+            <Message
+             success
+             header="Cadastrado com sucesso"
+             content="O pedido foi cadastrado com sucesso."/>
 
 
             <Form.Group widths='equal'>
                 <Form.Field>
                     <label>Nome do cliente </label>
-                    <Form.Input error={this.state.nameClientError ? true : false} placeholder='Digite o nome do Cliente ...' name="nameClient"  value={nameClient}  onChange={this.handleChange.bind(this)}>
+                    <Form.Input error={this.state.nameClientError ? true : false}  placeholder='Digite o nome do Cliente ...' name="nameClient"  value={nameClient}  onChange={this.handleChange.bind(this)}>
                     </Form.Input>
                 </Form.Field>
                 <Form.Field>
