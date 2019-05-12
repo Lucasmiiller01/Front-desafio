@@ -2,13 +2,12 @@ import React, { Component } from 'react'
 import api from '../../service/api'
 import ModalMessage from '../partials/modal'
 
-
 class ProfileDelivery extends Component {
     constructor(props) {
         super(props);
         this.state = {
             modalText: '',
-            delivery: {},
+            delivery: null,
             modalTitle: '',
             modalOpen: false,
             mapState: window.mapState,
@@ -35,6 +34,7 @@ class ProfileDelivery extends Component {
         })
         .catch((response) =>  {
             this.setState({modalOpen: true, modalTitle: 'Erro', modalText: 'Ocorreu um erro ao tentar autenticar, verifique as credenciais.'});
+
         }).finally(() => {
             if(error) {
                 return !error
@@ -58,13 +58,24 @@ class ProfileDelivery extends Component {
         })
         .catch((response) =>  {
             console.log(response);
-            this.setState({modalOpen: true, modalTitle: 'Erro', modalText: 'Ocorreu um erro ao tentar autenticar, verifique as credenciais.'});
+            this.setState({modalOpen: true, modalTitle: 'Erro', modalText: 'Ocorreu um erro ao buscar pedido, tente novamente mais tarde.'});
+            setTimeout(function() {
+                window.location.href = "/list";
+            }, 2000);
+            
         }).finally(() => {
             if (this.state.mapState.initMap) { 
-                var directionsService = new window.google.maps.DirectionsService();
-                var directionsDisplay = new window.google.maps.DirectionsRenderer();
-                var origin = !this.state.delivery.addresses[0].complent.original.erro ? (this.state.delivery.addresses[0].complent.original.logradouro + ', ' + this.state.delivery.addresses[0].number + ' - '+ this.state.delivery.addresses[0].complent.original.bairro +', '+ this.state.delivery.addresses[0].complent.original.localidade + ' - ' + this.state.delivery.addresses[0].complent.original.uf) : null;
-                var destination = !this.state.delivery.addresses[1].complent.original.erro ? this.state.delivery.addresses[1].complent.original.logradouro + ', ' + this.state.delivery.addresses[1].number + ' - '+ this.state.delivery.addresses[1].complent.original.bairro +', '+ this.state.delivery.addresses[1].complent.original.localidade + ' - ' + this.state.delivery.addresses[1].complent.original.uf : null;
+                let directionsService = new window.google.maps.DirectionsService();
+                let directionsDisplay = new window.google.maps.DirectionsRenderer();
+                let origin = null;
+                let destination = null;
+
+                if(this.state.delivery !== null){
+                    origin = !this.state.delivery.addresses[0].complent.original.erro ? (this.state.delivery.addresses[0].complent.original.logradouro + ', ' + this.state.delivery.addresses[0].number + ' - '+ this.state.delivery.addresses[0].complent.original.bairro +', '+ this.state.delivery.addresses[0].complent.original.localidade + ' - ' + this.state.delivery.addresses[0].complent.original.uf) : null;
+                    destination = !this.state.delivery.addresses[1].complent.original.erro ? this.state.delivery.addresses[1].complent.original.logradouro + ', ' + this.state.delivery.addresses[1].number + ' - '+ this.state.delivery.addresses[1].complent.original.bairro +', '+ this.state.delivery.addresses[1].complent.original.localidade + ' - ' + this.state.delivery.addresses[1].complent.original.uf : null;
+                }
+             
+               
 				let mapProp= {
 					zoom: 11,
 					center: {lat: -22.90, lng: -43.30}
@@ -82,8 +93,14 @@ class ProfileDelivery extends Component {
                     } 
                 });
 
-                if(error || origin == null || destination == null)
+                if(error || origin == null || destination == null) {
                     this.setState({modalOpen: true, modalTitle: 'Erro', modalText: 'Ocorreu um erro ao tentar carregar mapa, verifique se o endereço é válido.'});
+                    setTimeout(function() {
+                        window.location.href = "/list";
+                    }, 2000);
+                  
+                }
+                   
             }
            
         });

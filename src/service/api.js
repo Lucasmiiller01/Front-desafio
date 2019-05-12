@@ -2,7 +2,7 @@ import axios from "axios";
 
 
 const api = axios.create({
-  baseURL: "http://18.229.84.216"
+  baseURL: "http://18.229.84.216/Api-desafio/public"
 });
 
 api.interceptors.request.use(async config => {

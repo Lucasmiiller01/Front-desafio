@@ -16,7 +16,7 @@ export default class menu extends Component {
           
             <Menu.Item
                 name='Listar Pedidos'
-                as={ Link }  to='/List'
+                as={ Link }  to='/list'
                 active={activeItem === 'Listar Pedidos'}
                 onClick={this.handleItemClick}
             />

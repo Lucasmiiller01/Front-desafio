@@ -34,6 +34,7 @@ class listDelivery extends Component {
             console.log(response);
         })
         .catch((response) =>  {
+            console.log(response);
             this.setState({modalOpen: true, modalTitle: 'Erro', modalText: 'Ocorreu um erro ao tentar autenticar, verifique as credenciais.'});
         }).finally(() => {
             if(error) {
@@ -57,7 +58,7 @@ class listDelivery extends Component {
         })
         .catch((response) =>  {
             console.log(response);
-            this.setState({modalOpen: true, modalTitle: 'Erro', modalText: 'Ocorreu um erro ao tentar autenticar, verifique as credenciais.'});
+            this.setState({modalOpen: true, modalTitle: 'Erro', modalText: 'Ocorreu um erro ao tentar buscar pedidos, tente novamente mais tarde.'});
         }).finally(() => {
             if(error) {
                 return !error
@@ -98,19 +99,21 @@ class listDelivery extends Component {
 
     createTable = () => {
         let table = []
-
-        for (let i = 0; i < this.state.deliverys.length; i++) {
-            let children = []
-            children.push( <Table.Cell  key={this.state.deliverys[i].client.name}>{this.state.deliverys[i].client.name}</Table.Cell>)
-            children.push( <Table.Cell  key={this.state.deliverys[i].delivery_date}>{this.state.deliverys[i].delivery_date}</Table.Cell>)
-            
-            for (let j = 0; j < this.state.deliverys[i].addresses.length; j++) {
-                children.push( <Table.Cell  key={this.state.deliverys[i].addresses[j].zip + this.state.deliverys[i].addresses[j].pivot.type + this.state.deliverys[i].addresses[j].number}>{this.state.deliverys[i].addresses[j].zip} - {this.state.deliverys[i].addresses[j].number}</Table.Cell>)
-            }
-            let url = `/delivery/${this.state.deliverys[i].id}`;
-            children.push(<Table.Cell key={this.state.deliverys[i].id + 'btn'}><Button as={ Link }to={url}>Acessar</Button></Table.Cell>)
-            table.push(<Table.Row  key={i  + 1}>{children}</Table.Row>)
-        }   
+        if(this.state.deliverys.length > 0) {
+            for (let i = 0; i < this.state.deliverys.length; i++) {
+                let children = []
+                children.push( <Table.Cell  key={this.state.deliverys[i].client.name}>{this.state.deliverys[i].client.name}</Table.Cell>)
+                children.push( <Table.Cell  key={this.state.deliverys[i].delivery_date}>{this.state.deliverys[i].delivery_date}</Table.Cell>)
+                
+                for (let j = 0; j < this.state.deliverys[i].addresses.length; j++) {
+                    children.push( <Table.Cell  key={this.state.deliverys[i].addresses[j].zip + this.state.deliverys[i].addresses[j].pivot.type + this.state.deliverys[i].addresses[j].number}>{this.state.deliverys[i].addresses[j].zip} - {this.state.deliverys[i].addresses[j].number}</Table.Cell>)
+                }
+                let url = `/delivery/${this.state.deliverys[i].id}`;
+                children.push(<Table.Cell key={this.state.deliverys[i].id + 'btn'}><Button as={ Link }to={url}>Acessar</Button></Table.Cell>)
+                table.push(<Table.Row  key={i  + 1}>{children}</Table.Row>)
+            }   
+        }
+      
         return table
     }
 }
