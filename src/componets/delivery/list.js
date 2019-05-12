@@ -107,13 +107,14 @@ class listDelivery extends Component {
             for (let j = 0; j < this.state.deliverys[i].addresses.length; j++) {
                 children.push( <Table.Cell  key={this.state.deliverys[i].addresses[j].zip + this.state.deliverys[i].addresses[j].pivot.type + this.state.deliverys[i].addresses[j].number}>{this.state.deliverys[i].addresses[j].zip} - {this.state.deliverys[i].addresses[j].number}</Table.Cell>)
             }
-            let url = `/delivery/profile/${this.state.deliverys[i].id}`;
+            let url = `/delivery/${this.state.deliverys[i].id}`;
             children.push(<Table.Cell key={this.state.deliverys[i].id + 'btn'}><Button as={ Link }to={url}>Acessar</Button></Table.Cell>)
             table.push(<Table.Row  key={i  + 1}>{children}</Table.Row>)
         }   
         return table
     }
 }
+
 export default listDelivery;
 
 const style = {
