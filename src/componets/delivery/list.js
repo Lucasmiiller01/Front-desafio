@@ -30,7 +30,7 @@ class listDelivery extends Component {
             config: { headers: {'Content-Type': 'application/json' }}
         })
         .then((response) => {
-            localStorage.removeItem('__tokenAccess');
+            localStorage.setItem('__tokenAccess', response.data.access_token);
             console.log(response);
         })
         .catch((response) =>  {

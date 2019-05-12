@@ -93,7 +93,6 @@ class form extends Component {
         }).catch(e => {
             console.log(e.message.error);
             this.setState({modalOpen: true, modalTitle: 'Erro', modalText: 'Ocorreu um erro ao tentar cadastrar uma nova entrega, insira uma data válida.'});
-            localStorage.removeItem('__tokenAccess');
         })
     }
     SubmitForm = (e) =>  {
